@@ -52,8 +52,9 @@ const fetchAllSuperHero = async(searchText) => {
     try{
         //fetch the request, if it's successful, then show the list. 
         const response = await fetch(url);
-        allData = await response.json();
-        if(allData.response === 'success'){
+        allDataTest = await response.json();
+        if(allDataTest.response === 'success'){
+            allData = allDataTest;
             // console.log(allData);
             showSearchList(allData.results);
         }
@@ -76,7 +77,7 @@ const showSearchList = (data) => {
     });
 }
 
-// When the key is pressed up, it will do another search. This makes it so that the user can start typing and, as they type, new solutions come up. I believe we can get the same affect if we useState from react since it re-renders every time it changes. 
+// When the key is pressed up, it will do another search. This makes it so that the user can start typing and, as they type, new solutions come up. I believe we can get the same effect if we useState from react since it re-renders every time it changes. 
 searchForm.search.addEventListener('keyup', () => {
     if(searchForm.search.value.length > 1){
         fetchAllSuperHero(searchForm.search.value);
@@ -88,11 +89,20 @@ searchForm.search.addEventListener('keyup', () => {
 // Lets the user click on one of the choices that pop up when typing a name
 searchList.addEventListener('click', (event) => {
     let searchId = event.target.dataset.id;
-    let singleData = allData.results.filter(singleData => {
-        return searchId === singleData.id;
-    })
-    showSuperheroDetails(singleData);
-    searchList.innerHTML = "";
+    console.log(allData);
+    try{
+        let singleData = allData.results.filter(singleData => {
+            return searchId === singleData.id;
+        })
+        console.log(singleData);
+        showSuperheroDetails(singleData);
+        searchList.innerHTML = "";
+    }
+    catch(err){
+        console.log(err);
+    }
+    
+    
 });
 
 
